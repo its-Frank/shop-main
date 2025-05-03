@@ -86,13 +86,15 @@
       .row.g-4 {
         margin-bottom: 30px; /* Add margin to the bottom of the row */
       }
-      /* Add extra space after product grid */
       #cartForm {
         margin-bottom: 40px;
       }
-      /* Make sure each product column has consistent spacing */
       .col-12.col-md-6.col-lg-4.col-xl-3 {
         margin-bottom: 20px;
+      }
+      .delete-btn {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.5rem;
       }
     </style>
   </head>
@@ -190,11 +192,76 @@
                         class="form-control quantity-input"
                         disabled
                       />
+                      <% if (isAdmin) { %>
+                      <button
+                        type="button"
+                        class="btn btn-danger delete-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteProductModal-<%= product.id %>"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                      <% } %>
                     </div>
                   </div>
                 </div>
               </div>
-              <% }); %>
+              <!-- Delete Confirmation Modal (Admin Only) -->
+              <% if (isAdmin) { %>
+              <div
+                class="modal fade"
+                id="deleteProductModal-<%= product.id %>"
+                tabindex="-1"
+                aria-labelledby="deleteProductModalLabel-<%= product.id %>"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5
+                        class="modal-title"
+                        id="deleteProductModalLabel-<%= product.id %>"
+                      >
+                        Confirm Deletion
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to delete "<%= product.name %>"?
+                      This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                      <form
+                        action="/admin/delete-product"
+                        method="POST"
+                        style="display: inline"
+                      >
+                        <input
+                          type="hidden"
+                          name="productId"
+                          value="<%= product.id %>"
+                        />
+                        <button type="submit" class="btn btn-danger">
+                          Delete
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% } %> <% }); %>
             </div>
             <div class="mt-4 text-center mb-5">
               <button
