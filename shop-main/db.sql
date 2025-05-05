@@ -38,3 +38,13 @@ CREATE TABLE IF NOT EXISTS users (
         );
     ALTER TABLE users
 ADD COLUMN is_admin BOOLEAN DEFAULT FALSE;
+
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    paypal_order_id VARCHAR(255) NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) -- Optional: if user_id references a users table
+);
